@@ -63,7 +63,7 @@ for (const button of buttons) {
 							.split("+");
 						let numOneAdd = +numbersSplitAdd[0];
 						let numTwoAdd = +numbersSplitAdd[1].slice(0, -1);
-						console.log(numOneAdd, numTwoAdd);
+
 						numbersDisplayed.textContent = numOneAdd + numTwoAdd;
 					} else if (checkAdd.includes("-")) {
 						let numbersSplitSubtract = numbersStored
@@ -74,9 +74,33 @@ for (const button of buttons) {
 							0,
 							-1
 						);
-						console.log(numOneSubtract, numTwoSubtract);
+
 						numbersDisplayed.textContent =
 							numOneSubtract - numTwoSubtract;
+					} else if (checkAdd.includes("×")) {
+						let numbersSplitMultiply = numbersStored
+							.toString()
+							.split("×");
+						let numOneMultiply = +numbersSplitMultiply[0];
+						let numTwoMultiply = +numbersSplitMultiply[1].slice(
+							0,
+							-1
+						);
+
+						numbersDisplayed.textContent =
+							numOneMultiply * numTwoMultiply;
+					} else if (checkAdd.includes("÷")) {
+						let numbersSplitDivide = numbersStored
+							.toString()
+							.split("÷");
+						let numOneDivide = +numbersSplitDivide[0];
+						let numTwoDivide = +numbersSplitDivide[1].slice(0, -1);
+						if (numOneDivide == 0 && numTwoDivide == 0) {
+							alert("can't divide by 0");
+						} else {
+							numbersDisplayed.textContent =
+								numOneDivide / numTwoDivide;
+						}
 					}
 
 					break;
