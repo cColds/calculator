@@ -27,81 +27,60 @@ deletion.addEventListener("click", () => {
 });
 
 // listens for clicks on buttons and updates things
-function buttonsClicked() {
-	for (const button of buttons) {
-		button.addEventListener("click", () => {
-			// fix 0 at the start being gone when entering an operator or decimal
 
-			if (
-				numbersDisplayed.textContent == 0 &&
-				isNaN(Number(button.textContent))
-			) {
-				return (numbersDisplayed.textContent += button.textContent);
-			}
+for (const button of buttons) {
+	button.addEventListener("click", () => {
+		// fix 0 at the start being gone when entering an operator or decimal
 
-			let splitNum = numbersDisplayed.textContent.split("");
-			// fix adding more than one 0 at the start
-			if (splitNum.length == 1 && splitNum[0] == 0) splitNum.shift();
-			// console.log(+button.textContent + +button.textContent);
+		if (
+			numbersDisplayed.textContent == 0 &&
+			isNaN(Number(button.textContent))
+		) {
+			return (numbersDisplayed.textContent += button.textContent);
+		}
 
-			numbersDisplayed.textContent =
-				splitNum.join("") + button.textContent;
-			const numbersStored = [];
-			let numberValue = numbersDisplayed.textContent;
-			numbersStored.push(numberValue);
+		let splitNum = numbersDisplayed.textContent.split("");
+		// fix adding more than one 0 at the start
+		if (splitNum.length == 1 && splitNum[0] == 0) splitNum.shift();
 
-			switch (button.textContent) {
+		numbersDisplayed.textContent = splitNum.join("") + button.textContent;
+		const numbersStored = [];
+		let numberValue = numbersDisplayed.textContent;
+		numbersStored.push(numberValue);
+		const operator = numbersStored.toString().replace(/[0-9]/g, "");
+		let splitOperators = operator.toString().split("");
+
+		let assignmentOperator = splitOperators[1];
+
+		if (assignmentOperator || operator) {
+			switch (assignmentOperator || operator) {
 				case "=":
-					let numbersSplit = numbersStored.toString().split("+");
-					let numOne = +numbersSplit[0];
+					let checkAdd = numbersStored.toString().split("");
 
-					let numTwo = +numbersSplit[1].slice(0, -1);
-					console.log(
-						`I am num one (${numOne}), and I am num two (${numTwo})`
-					);
-					operate(numOne, numTwo, button.textContent);
+					if (checkAdd.includes("+")) {
+						let numbersSplitAdd = numbersStored
+							.toString()
+							.split("+");
+						let numOneAdd = +numbersSplitAdd[0];
+						let numTwoAdd = +numbersSplitAdd[1].slice(0, -1);
+						console.log(numOneAdd, numTwoAdd);
+						numbersDisplayed.textContent = numOneAdd + numTwoAdd;
+					} else if (checkAdd.includes("-")) {
+						let numbersSplitSubtract = numbersStored
+							.toString()
+							.split("-");
+						let numOneSubtract = +numbersSplitSubtract[0];
+						let numTwoSubtract = +numbersSplitSubtract[1].slice(
+							0,
+							-1
+						);
+						console.log(numOneSubtract, numTwoSubtract);
+						numbersDisplayed.textContent =
+							numOneSubtract - numTwoSubtract;
+					}
+
+					break;
 			}
-		});
-	}
-}
-
-buttonsClicked();
-
-function divide(a, b) {
-	return a / b;
-}
-
-function multiply(a, b) {
-	return a * b;
-}
-
-function subtract(a, b) {
-	return a - b;
-}
-
-function add(a, b) {
-	return a + b;
-}
-
-function operate(a, b, operator) {
-	switch (operator) {
-		case "=":
-			add(a, b);
-
-			numbersDisplayed.textContent = `${a + b}`;
-			console.log(a + b);
-			break;
-		case "-":
-			subtract(a, b);
-			console.log(a - b);
-			break;
-		case "×":
-			multiply(a, b);
-			console.log(a * b);
-			break;
-		case "÷":
-			divide(a, b);
-			console.log(a / b);
-			break;
-	}
+		}
+	});
 }
