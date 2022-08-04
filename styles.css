@@ -15,7 +15,9 @@ body {
 	box-sizing: border-box;
 	margin: 0px;
 	padding: 0px;
-
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+		Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+		sans-serif;
 	border: none;
 }
 
@@ -39,16 +41,20 @@ body {
 	border-radius: 10px;
 	display: flex;
 	justify-content: flex-end;
-	align-items: flex-end;
+}
+
+.numbersCalculated {
+	display: flex;
+	margin-top: 30px;
+	font-size: 30px;
 }
 
 .numbers {
+	display: flex;
+
 	margin-right: 20px;
-	margin-bottom: 10px;
+	margin-top: 80px;
 	font-size: 40px;
-	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-		Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-		sans-serif;
 }
 
 .buttonContainer {
