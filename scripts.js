@@ -11,10 +11,11 @@ const operatorButtons = document.querySelectorAll(".operator");
 // displays number to screen
 let numbersDisplayed = document.querySelector(".numbers");
 
-// clears things
+// clears everything
 const allClear = document.querySelector("#ac");
 allClear.addEventListener("click", () => (numbersDisplayed.textContent = 0));
 
+// deletes one (pops the last index) number, decimal, or operator
 const deletion = document.querySelector("#del");
 deletion.addEventListener("click", () => {
 	const numbersToDelete = numbersDisplayed.textContent;
@@ -30,8 +31,8 @@ deletion.addEventListener("click", () => {
 
 for (const button of buttons) {
 	button.addEventListener("click", () => {
+		let splitNum = numbersDisplayed.textContent.split("");
 		// fix 0 at the start being gone when entering an operator or decimal
-
 		if (
 			numbersDisplayed.textContent == 0 &&
 			isNaN(Number(button.textContent))
@@ -39,72 +40,73 @@ for (const button of buttons) {
 			return (numbersDisplayed.textContent += button.textContent);
 		}
 
-		let splitNum = numbersDisplayed.textContent.split("");
 		// fix adding more than one 0 at the start
-		if (splitNum.length == 1 && splitNum[0] == 0) splitNum.shift();
 
+		if (splitNum.length == 1 && splitNum[0] == 0) {
+			splitNum.shift();
+		}
 		numbersDisplayed.textContent = splitNum.join("") + button.textContent;
-		const numbersStored = [];
-		let numberValue = numbersDisplayed.textContent;
-		numbersStored.push(numberValue);
-		const operator = numbersStored.toString().replace(/[0-9]/g, "");
+		// operators
+		let arr = [];
+		arr.push(numbersDisplayed.textContent);
+
+		const operator = arr.toString().replace(/[0-9]/g, "");
 		let splitOperators = operator.toString().split("");
+		let assignmentOperator = splitOperators[splitOperators.length - 1];
 
-		let assignmentOperator = splitOperators[1];
+		console.log(arr);
+		let splitting = arr.toString().split("");
+		let replaceOperator = splitting.toString().replace(/[0-9,]/g, "");
+		let onlyNumbers = numbersDisplayed.textContent
+			.toString()
+			.replace(/\D+/g, "");
 
-		if (assignmentOperator || operator) {
-			switch (assignmentOperator || operator) {
-				case "=":
-					let checkAdd = numbersStored.toString().split("");
-
-					if (checkAdd.includes("+")) {
-						let numbersSplitAdd = numbersStored
-							.toString()
-							.split("+");
-						let numOneAdd = +numbersSplitAdd[0];
-						let numTwoAdd = +numbersSplitAdd[1].slice(0, -1);
-
-						numbersDisplayed.textContent = numOneAdd + numTwoAdd;
-					} else if (checkAdd.includes("-")) {
-						let numbersSplitSubtract = numbersStored
-							.toString()
-							.split("-");
-						let numOneSubtract = +numbersSplitSubtract[0];
-						let numTwoSubtract = +numbersSplitSubtract[1].slice(
-							0,
-							-1
-						);
-
-						numbersDisplayed.textContent =
-							numOneSubtract - numTwoSubtract;
-					} else if (checkAdd.includes("×")) {
-						let numbersSplitMultiply = numbersStored
-							.toString()
-							.split("×");
-						let numOneMultiply = +numbersSplitMultiply[0];
-						let numTwoMultiply = +numbersSplitMultiply[1].slice(
-							0,
-							-1
-						);
-
-						numbersDisplayed.textContent =
-							numOneMultiply * numTwoMultiply;
-					} else if (checkAdd.includes("÷")) {
-						let numbersSplitDivide = numbersStored
-							.toString()
-							.split("÷");
-						let numOneDivide = +numbersSplitDivide[0];
-						let numTwoDivide = +numbersSplitDivide[1].slice(0, -1);
-						if (numOneDivide == 0 && numTwoDivide == 0) {
-							alert("can't divide by 0");
-						} else {
-							numbersDisplayed.textContent =
-								numOneDivide / numTwoDivide;
-						}
-					}
-
-					break;
+		if (replaceOperator.length > 1) {
+			let replaceToArray = Array.from(replaceOperator);
+			replaceToArray.shift();
+			if (replaceToArray) {
+				numbersDisplayed.textContent = onlyNumbers + replaceToArray[0];
 			}
+		}
+		// calculate stuff
+
+		switch (assignmentOperator) {
+			case "=":
+				let checkAdd = arr.toString().split("");
+
+				if (checkAdd.includes("+")) {
+					let numbersSplitAdd = arr.toString().split("+");
+					let numOneAdd = +numbersSplitAdd[0];
+					let numTwoAdd = +numbersSplitAdd[1].slice(0, -1);
+
+					numbersDisplayed.textContent = numOneAdd + numTwoAdd;
+				} else if (checkAdd.includes("-")) {
+					let numbersSplitSubtract = arr.toString().split("-");
+					let numOneSubtract = +numbersSplitSubtract[0];
+					let numTwoSubtract = +numbersSplitSubtract[1].slice(0, -1);
+
+					numbersDisplayed.textContent =
+						numOneSubtract - numTwoSubtract;
+				} else if (checkAdd.includes("×")) {
+					let numbersSplitMultiply = arr.toString().split("×");
+					let numOneMultiply = +numbersSplitMultiply[0];
+					let numTwoMultiply = +numbersSplitMultiply[1].slice(0, -1);
+
+					numbersDisplayed.textContent =
+						numOneMultiply * numTwoMultiply;
+				} else if (checkAdd.includes("÷")) {
+					let numbersSplitDivide = arr.toString().split("÷");
+					let numOneDivide = +numbersSplitDivide[0];
+					let numTwoDivide = +numbersSplitDivide[1].slice(0, -1);
+					if (numOneDivide == 0 && numTwoDivide == 0) {
+						alert("can't divide by 0");
+					} else {
+						numbersDisplayed.textContent =
+							numOneDivide / numTwoDivide;
+					}
+				}
+
+				break;
 		}
 	});
 }
