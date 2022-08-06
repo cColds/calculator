@@ -31,17 +31,35 @@ deletion.addEventListener("click", () => {
 
 for (const button of buttons) {
 	button.addEventListener("click", () => {
-		let splitNum = numbersDisplayed.textContent.split("");
 		// fix 0 at the start being gone when entering an operator or decimal
+		let storeArr = [];
+		storeArr.push(numbersDisplayed.textContent);
+		console.log(storeArr);
+		let splitStoreArr = storeArr.toString().split("");
+		let joinArr = splitStoreArr.join("");
+		console.log(joinArr);
+
+		let checkHowManyAssignments = splitStoreArr.filter(
+			(item) => item == "="
+		).length;
+		let replaceStuff = joinArr.replace("=", "");
+		console.log(replaceStuff);
 		if (
-			numbersDisplayed.textContent == 0 &&
-			isNaN(Number(button.textContent))
+			storeArr.join("").match(/[+-×÷]/) !== true &&
+			checkHowManyAssignments == 1
+		) {
+			numbersDisplayed.textContent = replaceStuff;
+		} else if (
+			splitStoreArr[0] == 0 &&
+			isNaN(Number(button.textContent)) &&
+			splitStoreArr.length == 1 &&
+			button.textContent !== "="
 		) {
 			return (numbersDisplayed.textContent += button.textContent);
 		}
 
 		// fix adding more than one 0 at the start
-
+		let splitNum = numbersDisplayed.textContent.split("");
 		if (splitNum.length == 1 && splitNum[0] == 0) {
 			splitNum.shift();
 		}
@@ -55,19 +73,25 @@ for (const button of buttons) {
 		let assignmentOperator = splitOperators[splitOperators.length - 1];
 
 		console.log(arr);
-		let splitting = arr.toString().split("");
-		let replaceOperator = splitting.toString().replace(/[0-9,]/g, "");
-		let onlyNumbers = numbersDisplayed.textContent
-			.toString()
-			.replace(/\D+/g, "");
+		// prevent adding more than one operator at a time
+		let replaceOperator = arr.toString().replace(/[0-9,]/g, "");
+		let splitArr = arr.toString().split("");
 
-		if (replaceOperator.length > 1) {
-			let replaceToArray = Array.from(replaceOperator);
-			replaceToArray.shift();
-			if (replaceToArray) {
-				numbersDisplayed.textContent = onlyNumbers + replaceToArray[0];
+		if (splitArr.join("").match(/[+×÷-]/) && !splitArr.includes(".")) {
+			let onlyNumbers = numbersDisplayed.textContent
+				.toString()
+				.replace(/[^\d.]/g, "");
+
+			if (replaceOperator.length > 1) {
+				let replaceToArray = Array.from(replaceOperator);
+				replaceToArray.shift();
+				if (replaceToArray) {
+					numbersDisplayed.textContent =
+						onlyNumbers + replaceToArray[0];
+				}
 			}
 		}
+
 		// calculate stuff
 
 		switch (assignmentOperator) {
@@ -78,8 +102,8 @@ for (const button of buttons) {
 					let numbersSplitAdd = arr.toString().split("+");
 					let numOneAdd = +numbersSplitAdd[0];
 					let numTwoAdd = +numbersSplitAdd[1].slice(0, -1);
-
-					numbersDisplayed.textContent = numOneAdd + numTwoAdd;
+					let numbersStored = numOneAdd + numTwoAdd;
+					numbersDisplayed.textContent = numbersStored;
 				} else if (checkAdd.includes("-")) {
 					let numbersSplitSubtract = arr.toString().split("-");
 					let numOneSubtract = +numbersSplitSubtract[0];
