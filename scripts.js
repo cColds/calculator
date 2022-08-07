@@ -4,16 +4,56 @@ const assignmentButton = document.querySelector("#assignment");
 const numbersDisplayed = document.querySelector(".numbers");
 const allClear = document.querySelector("#ac");
 const deleteNumber = document.querySelector("#del");
-// listen for clicks on numbers and decimal
+const operators = ["+", "-", "×", "÷"];
 
+let numOne = 0;
+let numTwo = 0;
+// display numbers
+function displayNumbers(num) {
+	let storeValue = [];
+	if (num) {
+		const displaySplit = num.toString().split("");
+
+		if (
+			numbersDisplayed.textContent == 0 &&
+			!isNaN(displaySplit[0]) &&
+			displaySplit.length == 1
+		) {
+			numbersDisplayed.textContent = num;
+			storeValue.push(numbersDisplayed.textContent);
+		} else if (numbersDisplayed.textContent != num) {
+			numbersDisplayed.textContent += num;
+			storeValue.push(numbersDisplayed.textContent);
+		}
+	}
+
+	if (
+		storeValue.toString().split("").includes("+") ||
+		storeValue.toString().split("").includes("-") ||
+		storeValue.toString().split("").includes("×") ||
+		storeValue.toString().split("").includes("÷")
+	) {
+		const splitOperators = storeValue.toString().split("");
+		const onlyOperators = splitOperators.toString().replace(/[0-9,]/g, "");
+
+		let removeOperator = storeValue.join().split(/[+×÷-]/);
+
+		numOne = removeOperator[0];
+		numTwo = removeOperator[1];
+		if (numTwo) {
+			operate(+numOne, +numTwo, onlyOperators);
+		}
+	}
+}
+
+// listen for clicks on numbers and decimal
 for (const num of numberButtons) {
-	num.addEventListener("click", (e) => {
+	num.addEventListener("click", () => {
 		displayNumbers(num.textContent);
 	});
 }
 
 //listen for clicks on 4 operators (+,-,×,÷)
-
 for (const op of operatorButtons) {
 	op.addEventListener("click", (e) => {
 		displayNumbers(e.target.textContent);
@@ -21,26 +61,11 @@ for (const op of operatorButtons) {
 }
 
 // displays result when clicked
-
-assignmentButton.addEventListener("click", (e) => {
-	displayNumbers(e.target.textContent);
-});
-
-// display numbers
-function displayNumbers(num) {
-	const displaySplit = num.toString().split("");
-	if (
-		numbersDisplayed.textContent == 0 &&
-		!isNaN(displaySplit[0]) &&
-		displaySplit.length == 1
-	) {
-		numbersDisplayed.textContent = num;
-	} else {
-		numbersDisplayed.textContent += num;
-	}
-	console.log(numbersDisplayed.textContent);
+function assignment(result) {
+	assignmentButton.addEventListener("click", () => {
+		return displayNumbers((numbersDisplayed.textContent = result));
+	});
 }
-
 // clears all numbers
 allClear.addEventListener("click", () =>
 	displayNumbers((numbersDisplayed.textContent = 0))
@@ -59,19 +84,16 @@ deleteNumber.addEventListener("click", () => {
 function operate(a, b, operator) {
 	switch (operator) {
 		case "+":
-			add(a, b);
-			// let store = a + b;
-
-			// console.log(store);
+			assignment(add(a, b));
 			break;
 		case "-":
-			subtract(a, b);
+			assignment(subtract(a, b));
 			break;
 		case "×":
-			multiply(a, b);
+			assignment(multiply(a, b));
 			break;
 		case "÷":
-			divide(a, b);
+			assignment(divide(a, b));
 			break;
 	}
 }
