@@ -8,9 +8,9 @@ const operators = ["+", "-", "×", "÷"];
 
 let numOne = 0;
 let numTwo = 0;
-let storeResult = 0;
+
 // display numbers
-function displayNumbers(num) {
+function displayNumbers(num, empty) {
 	let storeValue = [];
 	if (num) {
 		const displaySplit = num.toString().split("");
@@ -22,7 +22,7 @@ function displayNumbers(num) {
 		) {
 			numbersDisplayed.textContent = num;
 			storeValue.push(numbersDisplayed.textContent);
-		} else if (numbersDisplayed.textContent != num) {
+		} else if (numbersDisplayed.textContent && !empty) {
 			numbersDisplayed.textContent += num;
 			storeValue.push(numbersDisplayed.textContent);
 		}
@@ -62,7 +62,7 @@ function displayNumbers(num) {
 				Array.from(onlyOperators).shift();
 				return;
 			} else if (onlyOperators[0].includes("÷")) {
-				valStored = +numOne / +numTwo;
+				valStored = Math.round((+numOne / +numTwo) * 100) / 100;
 				Array.from(onlyOperators).shift();
 				numbersDisplayed.textContent =
 					valStored + onlyOperators[onlyOperators.length - 1];
@@ -97,7 +97,7 @@ for (const op of operatorButtons) {
 // displays result when clicked
 function assignment(result) {
 	assignmentButton.addEventListener("click", () => {
-		return displayNumbers((numbersDisplayed.textContent = result));
+		displayNumbers(((numbersDisplayed.textContent = result), (value = "")));
 	});
 }
 // clears all numbers
@@ -118,21 +118,23 @@ deleteNumber.addEventListener("click", () => {
 function operate(a, b, operator, storeResult) {
 	switch (operator) {
 		case "+":
-			storeResult = a + b;
-			console.log(storeResult);
-			assignment(add(a, b));
+			storeResult = add(a, b);
+			assignment(storeResult);
 			break;
 		case "-":
-			assignment(subtract(a, b));
-			storeResult = a - b;
+			storeResult = subtract(a, b);
+			assignment(storeResult);
+
 			break;
 		case "×":
-			assignment(multiply(a, b));
-			storeResult = a * b;
+			storeResult = multiply(a, b);
+			assignment(storeResult);
+
 			break;
 		case "÷":
-			assignment(divide(a, b));
-			storeResult = a / b;
+			storeResult = divide(a, b);
+			assignment(storeResult);
+
 			break;
 	}
 }
@@ -151,5 +153,5 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
-	return a / b;
+	return Math.round((a / b) * 100) / 100;
 }
