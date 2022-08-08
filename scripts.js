@@ -8,6 +8,7 @@ const operators = ["+", "-", "×", "÷"];
 
 let numOne = 0;
 let numTwo = 0;
+let storeResult = 0;
 // display numbers
 function displayNumbers(num) {
 	let storeValue = [];
@@ -35,13 +36,46 @@ function displayNumbers(num) {
 	) {
 		const splitOperators = storeValue.toString().split("");
 		const onlyOperators = splitOperators.toString().replace(/[0-9,]/g, "");
-
+		onlyOperators.split("");
 		let removeOperator = storeValue.join().split(/[+×÷-]/);
 
 		numOne = removeOperator[0];
 		numTwo = removeOperator[1];
+		let valStored = 0;
+		if (onlyOperators.length > 1) {
+			if (onlyOperators[0].includes("+")) {
+				valStored = +numOne + +numTwo;
+				numbersDisplayed.textContent =
+					valStored + onlyOperators[onlyOperators.length - 1];
+				Array.from(onlyOperators).shift();
+				return;
+			} else if (onlyOperators[0].includes("-")) {
+				valStored = +numOne - +numTwo;
+				numbersDisplayed.textContent =
+					valStored + onlyOperators[onlyOperators.length - 1];
+				Array.from(onlyOperators).shift();
+				return;
+			} else if (onlyOperators[0].includes("×")) {
+				valStored = +numOne * +numTwo;
+				numbersDisplayed.textContent =
+					valStored + onlyOperators[onlyOperators.length - 1];
+				Array.from(onlyOperators).shift();
+				return;
+			} else if (onlyOperators[0].includes("÷")) {
+				valStored = +numOne / +numTwo;
+				Array.from(onlyOperators).shift();
+				numbersDisplayed.textContent =
+					valStored + onlyOperators[onlyOperators.length - 1];
+				return;
+			}
+		}
 		if (numTwo) {
-			operate(+numOne, +numTwo, onlyOperators);
+			operate(
+				+numOne,
+				+numTwo,
+				onlyOperators[onlyOperators.length - 1],
+				0
+			);
 		}
 	}
 }
@@ -81,19 +115,24 @@ deleteNumber.addEventListener("click", () => {
 });
 
 // takes operator and numbers
-function operate(a, b, operator) {
+function operate(a, b, operator, storeResult) {
 	switch (operator) {
 		case "+":
+			storeResult = a + b;
+			console.log(storeResult);
 			assignment(add(a, b));
 			break;
 		case "-":
 			assignment(subtract(a, b));
+			storeResult = a - b;
 			break;
 		case "×":
 			assignment(multiply(a, b));
+			storeResult = a * b;
 			break;
 		case "÷":
 			assignment(divide(a, b));
+			storeResult = a / b;
 			break;
 	}
 }
