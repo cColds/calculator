@@ -11,8 +11,8 @@ let numTwo = 0;
 // display numbers
 function displayNumbers(num) {
 	const storeValue = [];
-	// if (numbersDisplayed.textContent == "undefined")
-	// 	numbersDisplayed.textContent = 0;
+	if (numbersDisplayed.textContent == "undefined")
+		numbersDisplayed.textContent = 0;
 	if (num) {
 		const arr = [0];
 		arr.push(num);
@@ -53,8 +53,9 @@ function displayNumbers(num) {
 			else if (onlyOperators[0].includes("-")) numOperator = subtract;
 			else if (onlyOperators[0].includes("×")) numOperator = multiply;
 			else if (onlyOperators[0].includes("÷")) numOperator = divide;
-			// if (isNaN(divide((+numOne, +numTwo)) && numOperator == divide))
-			// 	return (numbersDisplayed.textContent = "undefined");
+			if (isNaN(+numOne / +numTwo) && numOperator == divide) {
+				return (numbersDisplayed.textContent = "undefined");
+			}
 			valStored = numOperator(+numOne, +numTwo);
 			Array.from(onlyOperators).shift();
 			numbersDisplayed.textContent =
@@ -84,9 +85,10 @@ for (const op of operatorButtons) {
 
 // displays result when clicked
 function assignment(result) {
-	assignmentButton.addEventListener(
-		"click",
-		() => (numbersDisplayed.textContent = result)
+	assignmentButton.addEventListener("click", () =>
+		isNaN(result)
+			? (numbersDisplayed.textContent = "undefined")
+			: (numbersDisplayed.textContent = result)
 	);
 }
 
