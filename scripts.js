@@ -4,18 +4,20 @@ const assignmentButton = document.querySelector("#assignment");
 const numbersDisplayed = document.querySelector(".numbers");
 const allClear = document.querySelector("#ac");
 const deleteNumber = document.querySelector("#del");
-const operators = ["+", "-", "×", "÷"];
 
 let numOne = 0;
 let numTwo = 0;
 
 // display numbers
-function displayNumbers(num, empty) {
+function displayNumbers(num) {
 	const storeValue = [];
+	// if (numbersDisplayed.textContent == "undefined")
+	// 	numbersDisplayed.textContent = 0;
 	if (num) {
 		const arr = [0];
 		arr.push(num);
-		let splitStr = numbersDisplayed.textContent.split("");
+		const splitStr = numbersDisplayed.textContent.split("");
+		// prevent 0 at the start e.g 01
 		if (
 			numbersDisplayed.textContent == arr[0] &&
 			!isNaN(num) &&
@@ -24,7 +26,7 @@ function displayNumbers(num, empty) {
 			arr.shift();
 			numbersDisplayed.textContent = arr[0];
 			storeValue.push(numbersDisplayed.textContent);
-		} else if (numbersDisplayed.textContent && !empty) {
+		} else {
 			numbersDisplayed.textContent += num;
 
 			storeValue.push(numbersDisplayed.textContent);
@@ -39,28 +41,27 @@ function displayNumbers(num, empty) {
 	) {
 		const splitOperators = storeValue.toString().split("");
 		const onlyOperators = splitOperators.toString().replace(/[0-9,.]/g, "");
+		const removeOperator = storeValue.join().split(/[+×÷-]/);
 		onlyOperators.split("");
-		let removeOperator = storeValue.join().split(/[+×÷-]/);
 
 		numOne = removeOperator[0];
 		numTwo = removeOperator[1];
 		let valStored = 0;
+		let numOperator;
 		if (onlyOperators.length > 1) {
-			if (onlyOperators[0].includes("+")) {
-				valStored = +numOne + +numTwo;
-			} else if (onlyOperators[0].includes("-")) {
-				valStored = +numOne - +numTwo;
-			} else if (onlyOperators[0].includes("×")) {
-				valStored = +numOne * +numTwo;
-			} else if (onlyOperators[0].includes("÷")) {
-				valStored = Math.round((+numOne / +numTwo) * 100) / 100;
-			}
+			if (onlyOperators[0].includes("+")) numOperator = add;
+			else if (onlyOperators[0].includes("-")) numOperator = subtract;
+			else if (onlyOperators[0].includes("×")) numOperator = multiply;
+			else if (onlyOperators[0].includes("÷")) numOperator = divide;
+			// if (isNaN(divide((+numOne, +numTwo)) && numOperator == divide))
+			// 	return (numbersDisplayed.textContent = "undefined");
+			valStored = numOperator(+numOne, +numTwo);
 			Array.from(onlyOperators).shift();
 			numbersDisplayed.textContent =
 				valStored + onlyOperators[onlyOperators.length - 1];
+
 			return;
-		}
-		if (numTwo) {
+		} else if (numTwo) {
 			operate(
 				+numOne,
 				+numTwo,
@@ -73,27 +74,26 @@ function displayNumbers(num, empty) {
 
 // listen for clicks on numbers and decimal
 for (const num of numberButtons) {
-	num.addEventListener("click", () => {
-		displayNumbers(num.textContent);
-	});
+	num.addEventListener("click", () => displayNumbers(num.textContent));
 }
 
 //listen for clicks on 4 operators (+,-,×,÷)
 for (const op of operatorButtons) {
-	op.addEventListener("click", (e) => {
-		displayNumbers(e.target.textContent);
-	});
+	op.addEventListener("click", (e) => displayNumbers(e.target.textContent));
 }
 
 // displays result when clicked
 function assignment(result) {
-	assignmentButton.addEventListener("click", () => {
-		displayNumbers(((numbersDisplayed.textContent = result), (value = "")));
-	});
+	assignmentButton.addEventListener(
+		"click",
+		() => (numbersDisplayed.textContent = result)
+	);
 }
+
 // clears all numbers
 allClear.addEventListener("click", () => {
-	displayNumbers((numbersDisplayed.textContent = 0));
+	numbersDisplayed.textContent = 0;
+	assignment((result = numbersDisplayed.textContent));
 });
 
 // deletes one number every click
@@ -104,43 +104,26 @@ deleteNumber.addEventListener("click", () => {
 	const delNumJoin = splitDelNum.join("");
 	numbersDisplayed.textContent = delNumJoin;
 });
-
+// math functions
+const add = (a, b) => a + b;
+const subtract = (a, b) => a - b;
+const multiply = (a, b) => a * b;
+const divide = (a, b) => Math.round((a / b) * 100) / 100;
 // takes operator and numbers
 function operate(a, b, operator, storeResult) {
 	switch (operator) {
 		case "+":
 			storeResult = add(a, b);
-
 			break;
 		case "-":
 			storeResult = subtract(a, b);
-
 			break;
 		case "×":
 			storeResult = multiply(a, b);
-
 			break;
 		case "÷":
 			storeResult = divide(a, b);
-
 			break;
 	}
 	assignment(storeResult);
-}
-
-// math functions
-function add(a, b) {
-	return a + b;
-}
-
-function subtract(a, b) {
-	return a - b;
-}
-
-function multiply(a, b) {
-	return a * b;
-}
-
-function divide(a, b) {
-	return Math.round((a / b) * 100) / 100;
 }
