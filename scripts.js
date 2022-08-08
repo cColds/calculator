@@ -11,14 +11,15 @@ let numTwo = 0;
 
 // display numbers
 function displayNumbers(num, empty) {
-	let storeValue = [];
+	const storeValue = [];
 	if (num) {
-		const displaySplit = num.toString().split("");
+		const arr = [0];
+		arr.push(num);
 
 		if (
 			numbersDisplayed.textContent == 0 &&
-			!isNaN(displaySplit[0]) &&
-			displaySplit.length == 1
+			!isNaN(arr[0]) &&
+			arr.length == 1
 		) {
 			numbersDisplayed.textContent = num;
 			storeValue.push(numbersDisplayed.textContent);
@@ -35,7 +36,7 @@ function displayNumbers(num, empty) {
 		storeValue.toString().split("").includes("÷")
 	) {
 		const splitOperators = storeValue.toString().split("");
-		const onlyOperators = splitOperators.toString().replace(/[0-9,]/g, "");
+		const onlyOperators = splitOperators.toString().replace(/[0-9,.]/g, "");
 		onlyOperators.split("");
 		let removeOperator = storeValue.join().split(/[+×÷-]/);
 
@@ -45,29 +46,17 @@ function displayNumbers(num, empty) {
 		if (onlyOperators.length > 1) {
 			if (onlyOperators[0].includes("+")) {
 				valStored = +numOne + +numTwo;
-				numbersDisplayed.textContent =
-					valStored + onlyOperators[onlyOperators.length - 1];
-				Array.from(onlyOperators).shift();
-				return;
 			} else if (onlyOperators[0].includes("-")) {
 				valStored = +numOne - +numTwo;
-				numbersDisplayed.textContent =
-					valStored + onlyOperators[onlyOperators.length - 1];
-				Array.from(onlyOperators).shift();
-				return;
 			} else if (onlyOperators[0].includes("×")) {
 				valStored = +numOne * +numTwo;
-				numbersDisplayed.textContent =
-					valStored + onlyOperators[onlyOperators.length - 1];
-				Array.from(onlyOperators).shift();
-				return;
 			} else if (onlyOperators[0].includes("÷")) {
 				valStored = Math.round((+numOne / +numTwo) * 100) / 100;
-				Array.from(onlyOperators).shift();
-				numbersDisplayed.textContent =
-					valStored + onlyOperators[onlyOperators.length - 1];
-				return;
 			}
+			Array.from(onlyOperators).shift();
+			numbersDisplayed.textContent =
+				valStored + onlyOperators[onlyOperators.length - 1];
+			return;
 		}
 		if (numTwo) {
 			operate(
@@ -101,9 +90,9 @@ function assignment(result) {
 	});
 }
 // clears all numbers
-allClear.addEventListener("click", () =>
-	displayNumbers((numbersDisplayed.textContent = 0))
-);
+allClear.addEventListener("click", () => {
+	displayNumbers((numbersDisplayed.textContent = 0));
+});
 
 // deletes one number every click
 deleteNumber.addEventListener("click", () => {
@@ -119,24 +108,22 @@ function operate(a, b, operator, storeResult) {
 	switch (operator) {
 		case "+":
 			storeResult = add(a, b);
-			assignment(storeResult);
+
 			break;
 		case "-":
 			storeResult = subtract(a, b);
-			assignment(storeResult);
 
 			break;
 		case "×":
 			storeResult = multiply(a, b);
-			assignment(storeResult);
 
 			break;
 		case "÷":
 			storeResult = divide(a, b);
-			assignment(storeResult);
 
 			break;
 	}
+	assignment(storeResult);
 }
 
 // math functions
