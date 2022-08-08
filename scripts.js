@@ -15,16 +15,18 @@ function displayNumbers(num, empty) {
 	if (num) {
 		const arr = [0];
 		arr.push(num);
-
+		let splitStr = numbersDisplayed.textContent.split("");
 		if (
-			numbersDisplayed.textContent == 0 &&
-			!isNaN(arr[0]) &&
-			arr.length == 1
+			numbersDisplayed.textContent == arr[0] &&
+			!isNaN(num) &&
+			!splitStr.includes(".")
 		) {
-			numbersDisplayed.textContent = num;
+			arr.shift();
+			numbersDisplayed.textContent = arr[0];
 			storeValue.push(numbersDisplayed.textContent);
 		} else if (numbersDisplayed.textContent && !empty) {
 			numbersDisplayed.textContent += num;
+
 			storeValue.push(numbersDisplayed.textContent);
 		}
 	}
