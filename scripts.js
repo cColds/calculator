@@ -43,18 +43,8 @@ function displayNumbers(num) {
 			numbersDisplayed.textContent = arr[0];
 			storeValue.push(numbersDisplayed.textContent);
 		} else if (decimalArr.length >= 1) {
-			if (removeOperatorInDecimal[0].includes("."))
-				decimals.disabled = true;
-			if (!removeOperatorInDecimal[0].includes("."))
-				decimals.disabled = false;
-			if (removeOperatorInDecimal[1]) {
-				if (removeOperatorInDecimal[1].includes("."))
-					decimals.disabled = true;
-				if (!removeOperatorInDecimal[1].includes("."))
-					decimals.disabled = false;
-			}
+			checkDecimals(removeOperatorInDecimal);
 			numbersDisplayed.textContent += num;
-
 			storeValue.push(numbersDisplayed.textContent);
 		} else {
 			numbersDisplayed.textContent += num;
@@ -83,8 +73,6 @@ function displayNumbers(num) {
 
 		numOne = removeOperator[0];
 		numTwo = removeOperator[1];
-		// if (numOne.includes(".")) numOne = checkDecimals(numOne);
-		// if (numTwo.includes(".")) numTwo = checkDecimals(numTwo);
 		let valStored = 0;
 		let numOperator;
 		if (onlyOperators.length > 1 && numTwo) {
@@ -112,24 +100,14 @@ function displayNumbers(num) {
 	}
 }
 
-// function checkDecimals(e) {
-// 	const splitting = e.split("");
-// 	let decimals = 0;
-// 	let arr = [];
-// 	for (const item of splitting) {
-// 		if (item == ".") {
-// 			decimals += 1;
-// 			arr.push(decimals);
-// 			console.log(arr);
-// 		}
-// 		if (decimals > 1) {
-// 			splitting.pop();
-// 			e = splitting.join("");
-// 			return e;
-// 		}
-// 	}
-// 	return e;
-// }
+function checkDecimals(num) {
+	if (num[0].includes(".")) decimals.disabled = true;
+	if (!num[0].includes(".")) decimals.disabled = false;
+	if (num[1]) {
+		if (num[1].includes(".")) decimals.disabled = true;
+		if (!num[1].includes(".")) decimals.disabled = false;
+	}
+}
 
 // listen for clicks on numbers and decimal
 for (const num of numberButtons) {
