@@ -4,19 +4,35 @@ const assignmentButton = document.querySelector("#assignment");
 const numbersDisplayed = document.querySelector(".numbers");
 const allClear = document.querySelector("#ac");
 const deleteNumber = document.querySelector("#del");
-
+const decimals = document.querySelector(".decimalButton");
 let numOne = 0;
 let numTwo = 0;
 
 // display numbers
 function displayNumbers(num) {
 	const storeValue = [];
+	const splitStr = numbersDisplayed.textContent.split("");
+	const decimalArr = [];
+	let text = numbersDisplayed.textContent;
+	text += num;
+	const splitText = text.split("");
+	// console.log(Array.from(text));
+	const removeOperatorInDecimal = Array.from(text)
+		.join("")
+		.split(/[+×÷-]/);
+	decimals.disabled = false;
+	console.log(removeOperatorInDecimal);
+	splitText.filter((item) => {
+		if (item == ".") {
+			decimalArr.push(item);
+		}
+	});
 	if (numbersDisplayed.textContent == "undefined")
 		numbersDisplayed.textContent = 0;
 	if (num) {
 		const arr = [0];
 		arr.push(num);
-		const splitStr = numbersDisplayed.textContent.split("");
+
 		// prevent 0 at the start e.g 01
 		if (
 			numbersDisplayed.textContent == arr[0] &&
@@ -25,6 +41,20 @@ function displayNumbers(num) {
 		) {
 			arr.shift();
 			numbersDisplayed.textContent = arr[0];
+			storeValue.push(numbersDisplayed.textContent);
+		} else if (decimalArr.length >= 1) {
+			if (removeOperatorInDecimal[0].includes("."))
+				decimals.disabled = true;
+			if (!removeOperatorInDecimal[0].includes("."))
+				decimals.disabled = false;
+			if (removeOperatorInDecimal[1]) {
+				if (removeOperatorInDecimal[1].includes("."))
+					decimals.disabled = true;
+				if (!removeOperatorInDecimal[1].includes("."))
+					decimals.disabled = false;
+			}
+			numbersDisplayed.textContent += num;
+
 			storeValue.push(numbersDisplayed.textContent);
 		} else {
 			numbersDisplayed.textContent += num;
@@ -50,11 +80,14 @@ function displayNumbers(num) {
 			onlyOperators = Array.from(onlyOperators);
 			onlyOperators.shift();
 		}
+
 		numOne = removeOperator[0];
 		numTwo = removeOperator[1];
+		// if (numOne.includes(".")) numOne = checkDecimals(numOne);
+		// if (numTwo.includes(".")) numTwo = checkDecimals(numTwo);
 		let valStored = 0;
 		let numOperator;
-		if (onlyOperators.length > 1) {
+		if (onlyOperators.length > 1 && numTwo) {
 			if (onlyOperators[0].includes("+")) numOperator = add;
 			else if (onlyOperators[0].includes("-")) numOperator = subtract;
 			else if (onlyOperators[0].includes("×")) numOperator = multiply;
@@ -68,7 +101,7 @@ function displayNumbers(num) {
 				valStored + onlyOperators[onlyOperators.length - 1];
 
 			return;
-		} else if (numTwo) {
+		} else if (!isNaN(numTwo) && numTwo) {
 			operate(
 				+numOne,
 				+numTwo,
@@ -78,6 +111,25 @@ function displayNumbers(num) {
 		}
 	}
 }
+
+// function checkDecimals(e) {
+// 	const splitting = e.split("");
+// 	let decimals = 0;
+// 	let arr = [];
+// 	for (const item of splitting) {
+// 		if (item == ".") {
+// 			decimals += 1;
+// 			arr.push(decimals);
+// 			console.log(arr);
+// 		}
+// 		if (decimals > 1) {
+// 			splitting.pop();
+// 			e = splitting.join("");
+// 			return e;
+// 		}
+// 	}
+// 	return e;
+// }
 
 // listen for clicks on numbers and decimal
 for (const num of numberButtons) {
@@ -102,6 +154,7 @@ function assignment(result) {
 allClear.addEventListener("click", () => {
 	numbersDisplayed.textContent = 0;
 	assignment((result = numbersDisplayed.textContent));
+	decimals.disabled = false;
 });
 
 // deletes one number every click
