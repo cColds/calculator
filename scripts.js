@@ -124,7 +124,7 @@ function assignment(result) {
 	assignmentButton.addEventListener("click", () =>
 		isNaN(result)
 			? (numbersDisplayed.textContent = "undefined")
-			: (numbersDisplayed.textContent = result)
+			: (numbersDisplayed.textContent = Math.round(result * 100) / 100)
 	);
 }
 
