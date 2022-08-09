@@ -40,10 +40,16 @@ function displayNumbers(num) {
 		storeValue.toString().split("").includes("÷")
 	) {
 		const splitOperators = storeValue.toString().split("");
-		const onlyOperators = splitOperators.toString().replace(/[0-9,.]/g, "");
 		const removeOperator = storeValue.join().split(/[+×÷-]/);
+		let onlyOperators = splitOperators.toString().replace(/[0-9,.]/g, "");
 		onlyOperators.split("");
-
+		if (!removeOperator[0] && removeOperator[0] !== 0) {
+			removeOperator[0] = "-";
+			removeOperator[1] = removeOperator[0] + removeOperator[1];
+			removeOperator.shift();
+			onlyOperators = Array.from(onlyOperators);
+			onlyOperators.shift();
+		}
 		numOne = removeOperator[0];
 		numTwo = removeOperator[1];
 		let valStored = 0;
