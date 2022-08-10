@@ -120,6 +120,13 @@ function checkDecimals(num) {
 	}
 }
 
+function isTextDeletedDecimal(character) {
+	for (char of character) {
+		if (Array.from(char).pop() == decimals.textContent)
+			decimals.disabled = false;
+	}
+}
+
 function replaceOperator([...text], operatorClicked) {
 	text.pop();
 	let lastTextValue = text[text.length - 1];
@@ -157,6 +164,7 @@ allClear.addEventListener("click", () => {
 deleteNumber.addEventListener("click", () => {
 	const splitDelNum = numbersDisplayed.textContent.toString().split("");
 	if (splitDelNum.length == 1) return (numbersDisplayed.textContent = 0);
+	if (splitDelNum.includes(".")) isTextDeletedDecimal(splitDelNum);
 	splitDelNum.pop();
 	const delNumJoin = splitDelNum.join("");
 	numbersDisplayed.textContent = delNumJoin;
