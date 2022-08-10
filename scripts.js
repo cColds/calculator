@@ -16,7 +16,7 @@ function displayNumbers(num) {
 	let text = numbersDisplayed.textContent;
 
 	text += num;
-	console.log(text);
+
 	disableAssignmentButton(text);
 	const lastIndex = splitStr[splitStr.length - 1];
 	const splitText = text.split("");
@@ -55,7 +55,9 @@ function displayNumbers(num) {
 			replaceOperator(text, num);
 			storeValue.push(numbersDisplayed.textContent);
 		} else if (decimalArr.length >= 1) {
-			checkDecimals(removeOperatorInDecimal);
+			const filtered = filterEmptyItem(removeOperatorInDecimal);
+
+			checkDecimals(filtered);
 			numbersDisplayed.textContent += num;
 			storeValue.push(numbersDisplayed.textContent);
 		} else {
@@ -138,7 +140,7 @@ function replaceOperator([...text], operatorClicked) {
 
 function disableAssignmentButton([...text], testCase) {
 	const splitOperator = text.join("").split(/[+×÷-]/);
-	console.log(splitOperator);
+
 	if (testCase == 5) splitOperator.pop();
 	if (!splitOperator[1]) assignmentButton.disabled = true;
 	else assignmentButton.disabled = false;
@@ -165,12 +167,12 @@ function assignment(result, decimal) {
 			: (numbersDisplayed.textContent = Math.round(result * 100) / 100);
 	});
 }
-// function filterEmptyItem(item) {
-// 	const filteredItem = Array.from(item).filter((el) => {
-// 		return el !== "";
-// 	});
-// 	return filteredItem;
-// }
+function filterEmptyItem(item) {
+	const filteredItem = Array.from(item).filter((el) => {
+		return el !== "";
+	});
+	return filteredItem;
+}
 // clears all numbers
 allClear.addEventListener("click", () => {
 	numbersDisplayed.textContent = 0;
