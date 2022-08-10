@@ -114,9 +114,12 @@ function displayNumbers(num) {
 }
 
 function checkDecimals(num) {
-	filterEmptyItem(num);
-	if (filterEmptyItem(num).includes(".")) decimals.disabled = true;
-	if (!filterEmptyItem(num).includes(".")) decimals.disabled = false;
+	if (num[0].includes(".")) decimals.disabled = true;
+	if (!num[0].includes(".")) decimals.disabled = false;
+	if (num[1]) {
+		if (num[1].includes(".")) decimals.disabled = true;
+		if (!num[1].includes(".")) decimals.disabled = false;
+	}
 }
 
 function isTextDeletedDecimal(character) {
@@ -162,12 +165,12 @@ function assignment(result, decimal) {
 			: (numbersDisplayed.textContent = Math.round(result * 100) / 100);
 	});
 }
-function filterEmptyItem(item) {
-	const filteredItem = Array.from(item).filter((el) => {
-		return el !== "";
-	});
-	return filteredItem;
-}
+// function filterEmptyItem(item) {
+// 	const filteredItem = Array.from(item).filter((el) => {
+// 		return el !== "";
+// 	});
+// 	return filteredItem;
+// }
 // clears all numbers
 allClear.addEventListener("click", () => {
 	numbersDisplayed.textContent = 0;
