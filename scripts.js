@@ -100,7 +100,7 @@ function displayNumbers(num) {
 			Array.from(onlyOperators).shift();
 			numbersDisplayed.textContent =
 				valStored + onlyOperators[onlyOperators.length - 1];
-
+			decimals.disabled = false;
 			return;
 		} else if (!isNaN(numTwo) && numTwo) {
 			operate(
@@ -114,12 +114,9 @@ function displayNumbers(num) {
 }
 
 function checkDecimals(num) {
-	if (num[0].includes(".")) decimals.disabled = true;
-	if (!num[0].includes(".")) decimals.disabled = false;
-	if (num[1]) {
-		if (num[1].includes(".")) decimals.disabled = true;
-		if (!num[1].includes(".")) decimals.disabled = false;
-	}
+	filterEmptyItem(num);
+	if (filterEmptyItem(num).includes(".")) decimals.disabled = true;
+	if (!filterEmptyItem(num).includes(".")) decimals.disabled = false;
 }
 
 function isTextDeletedDecimal(character) {
@@ -155,14 +152,22 @@ for (const op of operatorButtons) {
 }
 
 // displays result when clicked
-function assignment(result) {
-	assignmentButton.addEventListener("click", () =>
-		isNaN(result)
+function assignment(result, decimal) {
+	assignmentButton.addEventListener("click", () => {
+		const splitResult = result.toString().split("");
+		if (splitResult.includes(".")) decimals.disabled = true;
+		else decimals.disabled = false;
+		return isNaN(result)
 			? (numbersDisplayed.textContent = "undefined")
-			: (numbersDisplayed.textContent = Math.round(result * 100) / 100)
-	);
+			: (numbersDisplayed.textContent = Math.round(result * 100) / 100);
+	});
 }
-
+function filterEmptyItem(item) {
+	const filteredItem = Array.from(item).filter((el) => {
+		return el !== "";
+	});
+	return filteredItem;
+}
 // clears all numbers
 allClear.addEventListener("click", () => {
 	numbersDisplayed.textContent = 0;
