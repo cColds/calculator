@@ -14,14 +14,15 @@ function displayNumbers(num) {
 	const splitStr = numbersDisplayed.textContent.split("");
 	const decimalArr = [];
 	let text = numbersDisplayed.textContent;
+
 	text += num;
+
+	const lastIndex = splitStr[splitStr.length - 1];
 	const splitText = text.split("");
-	// console.log(Array.from(text));
 	const removeOperatorInDecimal = Array.from(text)
 		.join("")
 		.split(/[+×÷-]/);
-	decimals.disabled = false;
-	console.log(removeOperatorInDecimal);
+
 	splitText.filter((item) => {
 		if (item == ".") {
 			decimalArr.push(item);
@@ -41,6 +42,16 @@ function displayNumbers(num) {
 		) {
 			arr.shift();
 			numbersDisplayed.textContent = arr[0];
+			storeValue.push(numbersDisplayed.textContent);
+		} else if (
+			isNaN(num) &&
+			num !== "." &&
+			num !== "=" &&
+			isNaN(lastIndex) &&
+			lastIndex !== "." &&
+			lastIndex !== "="
+		) {
+			replaceOperator(text, num);
 			storeValue.push(numbersDisplayed.textContent);
 		} else if (decimalArr.length >= 1) {
 			checkDecimals(removeOperatorInDecimal);
@@ -107,6 +118,13 @@ function checkDecimals(num) {
 		if (num[1].includes(".")) decimals.disabled = true;
 		if (!num[1].includes(".")) decimals.disabled = false;
 	}
+}
+
+function replaceOperator([...text], operatorClicked) {
+	text.pop();
+	let lastTextValue = text[text.length - 1];
+	text = text.join("").replace(lastTextValue, operatorClicked);
+	numbersDisplayed.textContent = text;
 }
 
 // listen for clicks on numbers and decimal
