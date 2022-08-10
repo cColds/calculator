@@ -16,7 +16,8 @@ function displayNumbers(num) {
 	let text = numbersDisplayed.textContent;
 
 	text += num;
-
+	console.log(text);
+	disableAssignmentButton(text);
 	const lastIndex = splitStr[splitStr.length - 1];
 	const splitText = text.split("");
 	const removeOperatorInDecimal = Array.from(text)
@@ -84,6 +85,7 @@ function displayNumbers(num) {
 
 		numOne = removeOperator[0];
 		numTwo = removeOperator[1];
+
 		let valStored = 0;
 		let numOperator;
 		if (onlyOperators.length > 1 && numTwo) {
@@ -134,6 +136,14 @@ function replaceOperator([...text], operatorClicked) {
 	numbersDisplayed.textContent = text;
 }
 
+function disableAssignmentButton([...text], testCase) {
+	const splitOperator = text.join("").split(/[+×÷-]/);
+	console.log(splitOperator);
+	if (testCase == 5) splitOperator.pop();
+	if (!splitOperator[1]) assignmentButton.disabled = true;
+	else assignmentButton.disabled = false;
+}
+
 // listen for clicks on numbers and decimal
 for (const num of numberButtons) {
 	num.addEventListener("click", () => displayNumbers(num.textContent));
@@ -165,9 +175,16 @@ deleteNumber.addEventListener("click", () => {
 	const splitDelNum = numbersDisplayed.textContent.toString().split("");
 	if (splitDelNum.length == 1) return (numbersDisplayed.textContent = 0);
 	if (splitDelNum.includes(".")) isTextDeletedDecimal(splitDelNum);
-	splitDelNum.pop();
-	const delNumJoin = splitDelNum.join("");
-	numbersDisplayed.textContent = delNumJoin;
+	if (disableAssignmentButton(splitDelNum, 5)) {
+		const onlyOp = splitDelNum.join("").replace(/[0-9.]/g, "");
+		let delNumJoin = splitDelNum.join("");
+		numbersDisplayed.textContent = delNumJoin + onlyOp[0];
+	} else {
+		splitDelNum.pop();
+
+		let delNumJoin = splitDelNum.join("");
+		numbersDisplayed.textContent = delNumJoin;
+	}
 });
 // math functions
 const add = (a, b) => a + b;
