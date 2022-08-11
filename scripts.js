@@ -124,12 +124,12 @@ function checkDecimals(num) {
 	}
 }
 
-function isTextDeletedDecimal(character) {
-	for (char of character) {
-		if (Array.from(char).pop() == decimals.textContent)
-			decimals.disabled = false;
-	}
-}
+// function isTextDeletedDecimal(character) {
+// 	for (char of character) {
+// 		if (Array.from(char).pop() == decimals.textContent)
+// 			decimals.disabled = false;
+// 	}
+// }
 
 function replaceOperator([...text], operatorClicked) {
 	text.pop();
@@ -183,17 +183,25 @@ allClear.addEventListener("click", () => {
 // deletes one number every click
 deleteNumber.addEventListener("click", () => {
 	const splitDelNum = numbersDisplayed.textContent.toString().split("");
+	const splitDelNumCopy = splitDelNum;
 	if (splitDelNum.length == 1) return (numbersDisplayed.textContent = 0);
-	if (splitDelNum.includes(".")) isTextDeletedDecimal(splitDelNum);
-	if (disableAssignmentButton(splitDelNum, 5)) {
-		const onlyOp = splitDelNum.join("").replace(/[0-9.]/g, "");
-		let delNumJoin = splitDelNum.join("");
-		numbersDisplayed.textContent = delNumJoin + onlyOp[0];
+	if (splitDelNum.includes(".")) {
+		if (splitDelNumCopy.pop() == ".") decimals.disabled = false;
+		const splitOperatorDelNum = splitDelNum.join("").split(/[×+÷-]/);
+		if (!splitOperatorDelNum[1].includes(".")) {
+			decimals.disabled = true;
+			numbersDisplayed.textContent = splitDelNumCopy.join("");
+		}
 	} else {
 		splitDelNum.pop();
 
 		let delNumJoin = splitDelNum.join("");
 		numbersDisplayed.textContent = delNumJoin;
+	}
+	if (disableAssignmentButton(splitDelNum, 5)) {
+		const onlyOp = splitDelNum.join("").replace(/[0-9.]/g, "");
+		let delNumJoin = splitDelNum.join("");
+		numbersDisplayed.textContent = delNumJoin + onlyOp[0];
 	}
 });
 // math functions
