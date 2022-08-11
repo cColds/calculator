@@ -188,7 +188,7 @@ deleteNumber.addEventListener("click", () => {
 	if (splitDelNum.includes(".")) {
 		if (splitDelNumCopy.pop() == ".") decimals.disabled = false;
 		const splitOperatorDelNum = splitDelNum.join("").split(/[×+÷-]/);
-		if (!splitOperatorDelNum[1].includes(".")) {
+		if (!splitOperatorDelNum[1]?.includes(".")) {
 			decimals.disabled = true;
 			numbersDisplayed.textContent = splitDelNumCopy.join("");
 		}
