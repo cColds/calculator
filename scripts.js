@@ -58,8 +58,13 @@ function displayNumbers(num) {
 			const filtered = filterEmptyItem(removeOperatorInDecimal);
 
 			checkDecimals(filtered);
-			numbersDisplayed.textContent += num;
-			storeValue.push(numbersDisplayed.textContent);
+			if (removeOperatorInDecimal[1] == ".") {
+				numbersDisplayed.textContent += "0" + num;
+				storeValue.push(numbersDisplayed.textContent);
+			} else if (removeOperatorInDecimal[1] !== ".") {
+				numbersDisplayed.textContent += num;
+				storeValue.push(numbersDisplayed.textContent);
+			}
 		} else {
 			numbersDisplayed.textContent += num;
 
@@ -124,13 +129,6 @@ function checkDecimals(num) {
 	}
 }
 
-// function isTextDeletedDecimal(character) {
-// 	for (char of character) {
-// 		if (Array.from(char).pop() == decimals.textContent)
-// 			decimals.disabled = false;
-// 	}
-// }
-
 function replaceOperator([...text], operatorClicked) {
 	text.pop();
 	let lastTextValue = text[text.length - 1];
@@ -185,13 +183,19 @@ deleteNumber.addEventListener("click", () => {
 	const splitDelNum = numbersDisplayed.textContent.toString().split("");
 	const splitDelNumCopy = splitDelNum;
 	if (splitDelNum.length == 1) return (numbersDisplayed.textContent = 0);
+	const splitOperatorDelNum = splitDelNum.join("").split(/[×+÷-]/);
+	if (
+		(splitOperatorDelNum[1] == undefined ||
+			!splitOperatorDelNum[1].includes(".")) &&
+		splitOperatorDelNum[0].includes(".")
+	) {
+		console.log("hello");
+		decimals.disabled = true;
+	}
 	if (splitDelNum.includes(".")) {
 		if (splitDelNumCopy.pop() == ".") decimals.disabled = false;
-		const splitOperatorDelNum = splitDelNum.join("").split(/[×+÷-]/);
-		if (!splitOperatorDelNum[1]?.includes(".")) {
-			decimals.disabled = true;
-			numbersDisplayed.textContent = splitDelNumCopy.join("");
-		}
+
+		numbersDisplayed.textContent = splitDelNumCopy.join("");
 	} else {
 		splitDelNum.pop();
 
